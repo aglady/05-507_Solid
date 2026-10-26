@@ -14,9 +14,11 @@ public class TaskPresenter {
     private final TaskView view;
     // SINGLETON: зависимость скрыта внутри класса, в конструкторе её не видно
     private final TaskService service = TaskService.getInstance();
+    private  final TaskInputParser inputParser;
 
-    public TaskPresenter(TaskView view) {
+    public TaskPresenter(TaskView view,TaskInputParser inputParser) {
         this.view = view;
+        this.inputParser=inputParser;
     }
 
     public void start() {
@@ -25,8 +27,8 @@ public class TaskPresenter {
 
     public void saveClicked() {
         try {
-            LocalDate deadline = parseDeadline(view.getDeadlineText());
-            Priority priority = parsePriority(view.getPriority());
+            LocalDate deadline = inputParser.parseDeadline(view.getDeadlineText());
+            Priority priority = inputParser.parsePriority(view.getPriority());
             service.createTask(view.getTaskTitle(), deadline, priority, view.isArchived());
             view.clearForm();
             refresh(view.getFilter());
@@ -69,23 +71,5 @@ public class TaskPresenter {
         view.showStatistics(service.buildStatisticsText());
     }
 
-    private LocalDate parseDeadline(String text) {
-        if (text == null || text.isBlank())
-            throw new IllegalArgumentException("Дата выполнения не может быть пустой");
-        try {
-            return LocalDate.parse(text.trim());
-        } catch (DateTimeParseException ex) {
-            throw new IllegalArgumentException("Дата должна быть в формате yyyy-MM-dd");
-        }
-    }
 
-    private Priority parsePriority(String priority) {
-        if (priority == null || priority.isBlank())
-            throw new IllegalArgumentException("Приоритет не может быть пустым");
-        try {
-            return Priority.valueOf(priority.trim());
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Неверный вариант");
-        }
-    }
 }

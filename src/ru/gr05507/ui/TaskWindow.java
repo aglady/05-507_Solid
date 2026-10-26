@@ -24,8 +24,8 @@ public class TaskWindow extends JFrame implements TaskView {
     private final JList<Task> taskList = new JList<>(listModel);
     private final JLabel statisticsLabel = new JLabel(" ");
 
-    public TaskWindow() {
-        this.presenter = new TaskPresenter(this);
+    public TaskWindow(TaskInputParser inputParser) {
+        this.presenter = new TaskPresenter(this,inputParser);
 
         setTitle("Список задач");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
