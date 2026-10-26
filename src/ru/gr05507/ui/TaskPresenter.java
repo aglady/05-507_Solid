@@ -1,6 +1,7 @@
 package ru.gr05507.ui;
 
 import ru.gr05507.application.TaskService;
+import ru.gr05507.domain.Priority;
 import ru.gr05507.domain.Task;
 
 import java.time.LocalDate;
@@ -25,7 +26,8 @@ public class TaskPresenter {
     public void saveClicked() {
         try {
             LocalDate deadline = parseDeadline(view.getDeadlineText());
-            service.createTask(view.getTaskTitle(), deadline, view.getPriority(), view.isArchived());
+            Priority priority = parsePriority(view.getPriority());
+            service.createTask(view.getTaskTitle(), deadline, priority, view.isArchived());
             view.clearForm();
             refresh(view.getFilter());
         } catch (IllegalArgumentException ex) {
@@ -60,7 +62,7 @@ public class TaskPresenter {
                 if (!t.isDone() && t.getDeadline().isBefore(LocalDate.now())) result.add(t);
             } else if (filterName.equals("Высокий приоритет")) {
                 // PRIMITIVE: сравнение строки с "HIGH"
-                if (t.getPriority().equals("HIGH")) result.add(t);
+                if (t.getPriority().equals(Priority.HIGH)) result.add(t);
             }
         }
         view.showTasks(result);
@@ -74,6 +76,16 @@ public class TaskPresenter {
             return LocalDate.parse(text.trim());
         } catch (DateTimeParseException ex) {
             throw new IllegalArgumentException("Дата должна быть в формате yyyy-MM-dd");
+        }
+    }
+
+    private Priority parsePriority(String priority) {
+        if (priority == null || priority.isBlank())
+            throw new IllegalArgumentException("Приоритет не может быть пустым");
+        try {
+            return Priority.valueOf(priority.trim());
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Неверный вариант");
         }
     }
 }

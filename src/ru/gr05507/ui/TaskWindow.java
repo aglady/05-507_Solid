@@ -1,5 +1,6 @@
 package ru.gr05507.ui;
 
+import ru.gr05507.domain.Priority;
 import ru.gr05507.domain.Task;
 
 import javax.swing.*;
@@ -85,9 +86,9 @@ public class TaskWindow extends JFrame implements TaskView {
         filterBox.addActionListener(e -> presenter.filterChanged());
     }
 
-    private Color colorFor(String priority) {
-        if (priority.equals("HIGH")) return Color.RED;
-        if (priority.equals("MEDIUM")) return Color.ORANGE;
+    private Color colorFor(Priority priority) {
+        if (priority.equals(Priority.HIGH)) return Color.RED;
+        if (priority.equals(Priority.MEDIUM)) return Color.ORANGE;
         return Color.GRAY;
     }
 

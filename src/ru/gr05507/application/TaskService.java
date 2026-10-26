@@ -1,6 +1,7 @@
 package ru.gr05507.application;
 
 import ru.gr05507.domain.ArchivedTask;
+import ru.gr05507.domain.Priority;
 import ru.gr05507.domain.Task;
 import ru.gr05507.domain.TaskRepository;
 import ru.gr05507.infrastructure.InMemoryTaskRepository;
@@ -20,7 +21,7 @@ public class TaskService {
     public static TaskService getInstance() { return INSTANCE; }
 
     // ANEMIC: все проверки здесь, а сама задача ничего не проверяет
-    public void createTask(String title, LocalDate deadline, String priority, boolean archived) {
+    public void createTask(String title, LocalDate deadline, Priority priority, boolean archived) {
         if (title == null || title.isBlank())
             throw new IllegalArgumentException("Название задачи не может быть пустым");
         if (deadline == null)
